@@ -10,7 +10,7 @@ export const ForgotPasswordPage: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [resetToken, setResetToken] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // optional: show backend message
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -29,11 +29,13 @@ export const ForgotPasswordPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await authService.forgotPassword({ email });
-      setResetToken(response.reset_token);
+      // No need to store response if backend only returns message
+      const { message } = await authService.forgotPassword({ email });
+      setSuccessMessage(message || 'Password reset link sent successfully.');
       setSuccess(true);
     } catch (err: any) {
-      const message = err.response?.data?.error || 'Failed to send reset link. Please try again.';
+      const message =
+        err.response?.data?.error || 'Failed to send reset link. Please try again.';
       setError(message);
     } finally {
       setLoading(false);
@@ -51,21 +53,8 @@ export const ForgotPasswordPage: React.FC = () => {
           </div>
           <div className="rounded-md bg-green-50 p-4">
             <p className="text-sm text-green-800">
-              Password reset instructions have been sent to {email}
+              {successMessage} <br />
             </p>
-            {resetToken && (
-              <p className="mt-2 text-xs text-gray-600">
-                Reset token (for demo): {resetToken}
-              </p>
-            )}
-          </div>
-          <div className="text-center">
-            <Link
-              to={`/reset-password?email=${encodeURIComponent(email)}&token=${resetToken}`}
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              Go to reset password page
-            </Link>
           </div>
           <div className="text-center">
             <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">

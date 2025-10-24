@@ -113,7 +113,7 @@ export const authService = {
     return response.data;
   },
 
-  async forgotPassword(data: ForgotPasswordData): Promise<{ message: string; reset_token: string }> {
+  async forgotPassword(data: ForgotPasswordData): Promise<{ message: string }> {
     const response = await api.post('/auth/forgot-password/', data);
     return response.data;
   },
