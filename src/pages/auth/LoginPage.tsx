@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { validateEmail, validateRequired } from '../utils/validation';
+import { useAuth } from '../../contexts/AuthContext';
+import { validateEmail, validateRequired } from '../../utils/validation';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({

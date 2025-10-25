@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { authService } from '../services/auth.service';
-import { validatePassword, validateConfirmPassword } from '../utils/validation';
+import { authService } from '../../services/auth.service';
+import { validatePassword, validateConfirmPassword } from '../../utils/validation';
 
 export const ResetPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();

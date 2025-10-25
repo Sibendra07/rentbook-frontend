@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { authService } from '../services/auth.service';
-import { validateEmail } from '../utils/validation';
+import { authService } from '../../services/auth.service';
+import { validateEmail } from '../../utils/validation';
 
 export const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');

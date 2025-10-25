@@ -1,9 +1,9 @@
 // src/pages/ProfilePage.tsx
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { authService } from '../services/auth.service';
-import { validateName, validatePhone, validateDate } from '../utils/validation';
+import { useAuth } from '../../contexts/AuthContext';
+import { authService } from '../../services/auth.service';
+import { validateName, validatePhone, validateDate } from '../../utils/validation';
 
 export const ProfilePage: React.FC = () => {
   const { user, refreshUser } = useAuth();
