@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Header } from '../components/Header';
-import { Sidebar } from '../components/Sidebar';
+import { DashboardLayout } from '../components/DashboardLayout';
 import { Home, Users, DollarSign, TrendingUp } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
@@ -52,14 +51,8 @@ export const DashboardPage: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        
-        <main className="flex-1 overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-6 py-8">
+    <DashboardLayout>
+      <div className="max-w-7xl mx-auto px-6 py-8">
             {/* Welcome Section */}
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-900">
@@ -144,9 +137,7 @@ export const DashboardPage: React.FC = () => {
                 </table>
               </div>
             </div>
-          </div>
-        </main>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };

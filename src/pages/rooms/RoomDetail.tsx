@@ -1,8 +1,10 @@
 // src/pages/RoomDetail.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { DashboardLayout } from '../../components/DashboardLayout';
 import { roomService } from '../../services/roomservice';
 import type { Room } from '../../types/room';
+import { ArrowLeft, Edit, Trash2, Home, DollarSign, Ruler, Layers } from 'lucide-react';
 
 const RoomDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,134 +33,110 @@ const RoomDetail: React.FC = () => {
 
   const getStatusBadgeClass = (status: string) => {
     const classes = {
-      available: 'bg-green-100 text-green-800',
-      occupied: 'bg-red-100 text-red-800',
-      maintenance: 'bg-yellow-100 text-yellow-800',
-      reserved: 'bg-blue-100 text-blue-800',
+      available: 'bg-green-100 text-green-800 border-green-200',
+      occupied: 'bg-red-100 text-red-800 border-red-200',
+      maintenance: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      reserved: 'bg-blue-100 text-blue-800 border-blue-200',
     };
-    return classes[status as keyof typeof classes] || 'bg-gray-100 text-gray-800';
+    return classes[status as keyof typeof classes] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Loading room...</div>
-      </div>
+      <DashboardLayout>
+        <div className="flex justify-center items-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading room details...</p>
+          </div>
+        </div>
+      </DashboardLayout>
     );
   }
 
   if (error || !room) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error || 'Room not found'}
+      <DashboardLayout>
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg mb-6">
+            <p className="font-semibold">{error || 'Room not found'}</p>
+          </div>
+          <button
+            onClick={() => navigate('/rooms')}
+            className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Rooms
+          </button>
         </div>
-        <Link to="/rooms" className="text-blue-600 hover:underline">
-          ← Back to Rooms
-        </Link>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <Link to="/rooms" className="text-blue-600 hover:underline mb-4 inline-block">
-          ← Back to Rooms
-        </Link>
-
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          {room.image && (
-            <img
-              src={room.image}
-              alt={`Room ${room.room_number}`}
-              className="w-full h-96 object-cover"
-            />
-          )}
-
-          <div className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">Room {room.room_number}</h1>
-                <span
-                  className={`px-3 py-1 rounded text-sm font-semibold ${getStatusBadgeClass(
-                    room.status
-                  )}`}
-                >
-                  {room.status.charAt(0).toUpperCase() + room.status.slice(1)}
-                </span>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold text-blue-600">
-                  ${room.base_rent_amount}
-                </div>
-                <div className="text-sm text-gray-600">per month</div>
-              </div>
+    <DashboardLayout>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="mb-6">
+          <button
+            onClick={() => navigate('/rooms')}
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Rooms
+          </button>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Room {room.room_number}</h1>
+              <p className="mt-1 text-gray-600">Detailed room information and management</p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Room Details</h3>
-                <dl className="space-y-2">
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Floor:</dt>
-                    <dd className="font-semibold">{room.floor}</dd>
-                  </div>
-                  {room.room_type && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Type:</dt>
-                      <dd className="font-semibold">{room.room_type}</dd>
-                    </div>
-                  )}
-                  {room.size && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Size:</dt>
-                      <dd className="font-semibold">{room.size} sq m</dd>
-                    </div>
-                  )}
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Active:</dt>
-                    <dd className="font-semibold">
-                      {room.is_active ? (
-                        <span className="text-green-600">Yes</span>
-                      ) : (
-                        <span className="text-red-600">No</span>
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Payment Details</h3>
-                <dl className="space-y-2">
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Monthly Rent:</dt>
-                    <dd className="font-semibold">${room.base_rent_amount}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Security Deposit:</dt>
-                    <dd className="font-semibold">${room.base_security_deposit_amount}</dd>
-                  </div>
-                </dl>
-              </div>
+            <div className="flex gap-3">
+              <Link
+                to={`/rooms/${room.id}/edit`}
+                className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Room
+              </Link>
+              <button className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </button>
             </div>
+          </div>
+        </div>
 
-            {room.description && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Description</h3>
-                <p className="text-gray-700 whitespace-pre-line">{room.description}</p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Room Image */}
+            {room.image && (
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <img
+                  src={room.image}
+                  alt={`Room ${room.room_number}`}
+                  className="w-full h-96 object-cover"
+                />
               </div>
             )}
 
+            {/* Description */}
+            {room.description && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Description</h3>
+                <p className="text-gray-700 whitespace-pre-line leading-relaxed">{room.description}</p>
+              </div>
+            )}
+
+            {/* Amenities */}
             {room.amenities && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Amenities</h3>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Amenities</h3>
                 <div className="flex flex-wrap gap-2">
                   {room.amenities.split(',').map((amenity, index) => (
                     <span
                       key={index}
-                      className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                      className="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-sm font-medium border border-indigo-100"
                     >
                       {amenity.trim()}
                     </span>
@@ -166,30 +144,94 @@ const RoomDetail: React.FC = () => {
                 </div>
               </div>
             )}
+          </div>
 
-            <div className="border-t pt-4 text-sm text-gray-500">
-              <p>Created: {new Date(room.created_at).toLocaleString()}</p>
-              <p>Last Updated: {new Date(room.updated_at).toLocaleString()}</p>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Status & Price Card */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className={`px-3 py-1.5 rounded-lg text-sm font-semibold border ${getStatusBadgeClass(room.status)}`}>
+                  {room.status.charAt(0).toUpperCase() + room.status.slice(1)}
+                </span>
+                {room.is_active ? (
+                  <span className="text-green-600 text-sm font-medium">● Active</span>
+                ) : (
+                  <span className="text-red-600 text-sm font-medium">● Inactive</span>
+                )}
+              </div>
+              <div className="border-t pt-4">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-indigo-600">
+                    ${room.base_rent_amount}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">per month</div>
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-4 mt-6">
-              <Link
-                to={`/rooms/${room.id}/edit`}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded text-center hover:bg-blue-700"
-              >
-                Edit Room
-              </Link>
-              <button
-                onClick={() => navigate('/rooms')}
-                className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300"
-              >
-                Back to List
-              </button>
+            {/* Room Details */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Room Details</h3>
+              <dl className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <dt className="flex items-center text-gray-600">
+                    <Layers className="h-4 w-4 mr-2" />
+                    Floor
+                  </dt>
+                  <dd className="font-semibold text-gray-900">{room.floor}</dd>
+                </div>
+                {room.room_type && (
+                  <div className="flex items-center justify-between">
+                    <dt className="flex items-center text-gray-600">
+                      <Home className="h-4 w-4 mr-2" />
+                      Type
+                    </dt>
+                    <dd className="font-semibold text-gray-900">{room.room_type}</dd>
+                  </div>
+                )}
+                {room.size && (
+                  <div className="flex items-center justify-between">
+                    <dt className="flex items-center text-gray-600">
+                      <Ruler className="h-4 w-4 mr-2" />
+                      Size
+                    </dt>
+                    <dd className="font-semibold text-gray-900">{room.size} sq m</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+
+            {/* Payment Details */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment Details</h3>
+              <dl className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <dt className="flex items-center text-gray-600">
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    Monthly Rent
+                  </dt>
+                  <dd className="font-semibold text-gray-900">${room.base_rent_amount}</dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="flex items-center text-gray-600">
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    Security Deposit
+                  </dt>
+                  <dd className="font-semibold text-gray-900">${room.base_security_deposit_amount}</dd>
+                </div>
+              </dl>
+            </div>
+
+            {/* Metadata */}
+            <div className="bg-gray-50 rounded-lg p-4 text-xs text-gray-600 space-y-1">
+              <p>Created: {new Date(room.created_at).toLocaleString()}</p>
+              <p>Updated: {new Date(room.updated_at).toLocaleString()}</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
