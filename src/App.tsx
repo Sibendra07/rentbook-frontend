@@ -10,6 +10,10 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProfilePage } from './pages/ProfilePage';
+import RoomDetail from './pages/rooms/RoomDetail';
+import RoomEdit from './pages/rooms/RoomEdit';
+import RoomCreate from './pages/rooms/RoomCreate';
+import RoomList from './pages/rooms/RoomList';
 
 function App() {
   return (
@@ -39,6 +43,39 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route 
+            path="/rooms" 
+            element={
+              <ProtectedRoute>
+                <RoomList />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/rooms/create" 
+            element={
+              <ProtectedRoute>
+                <RoomCreate/>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/rooms/:id" 
+            element={
+              <ProtectedRoute>
+                <RoomDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/rooms/:id/edit" 
+            element={
+              <ProtectedRoute>
+                <RoomEdit />
+              </ProtectedRoute>
+            } 
+          />
+          
 
           {/* Default Route */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
