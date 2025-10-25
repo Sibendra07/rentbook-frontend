@@ -1,40 +1,31 @@
 // src/components/DashboardLayout.tsx
-// Optional: Use this layout component to wrap all dashboard pages
-
-import React from 'react';
-import { Header } from './Header';
+import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
+import { Header } from './Header';
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
+export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        
+      {/* Sidebar */}
+      <Sidebar
+        mobileOpen={mobileSidebarOpen}
+        onClose={() => setMobileSidebarOpen(false)}
+      />
+
+      {/* Main Content */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Header with Toggle */}
+        <Header onToggleSidebar={() => setMobileSidebarOpen(true)} />
+
+        {/* Page Content */}
         <main className="flex-1 overflow-y-auto">
-          {children}
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+            {children}
+          </div>
         </main>
       </div>
     </div>
   );
 };
-
-// Usage example in any page:
-// 
-// import { DashboardLayout } from '../components/DashboardLayout';
-// 
-// export const RoomsPage: React.FC = () => {
-//   return (
-//     <DashboardLayout>
-//       <div className="max-w-7xl mx-auto px-6 py-8">
-//         {/* Your page content */}
-//       </div>
-//     </DashboardLayout>
-//   );
-// };
